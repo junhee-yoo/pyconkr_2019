@@ -2,17 +2,18 @@ import os
 import sys
 import configparser
 
+import cliff
 from cliff.app import App
 
 from tutorial.common.commandmanager import CommandManager
-
-APP = None
 
 
 class Tutorial(App):
     """
     Cliff Tutorial
     """
+    __instance = None
+
     def __init__(self):
         super(Tutorial, self).__init__(
             description='cliff tutorial',
@@ -22,13 +23,17 @@ class Tutorial(App):
         )
         self.config = None
 
-    @staticmethod
-    def get_instance():
-        global APP
-        if not APP:
-            APP = Tutorial()
+    @classmethod
+    def __get_instance(cls):
+        return cls.__instance
 
-        return APP
+    @classmethod
+    def instance(cls):
+        if not cls.__instance:
+            cls.__instance = Tutorial()
+            cls.instance = cls.__get_instance()
+
+        return cls.__instance
 
     def build_option_parser(self, description, version,
                             argparse_kwargs=None):
@@ -47,6 +52,7 @@ class Tutorial(App):
         # TODO(jhyoo): change this to plug-in structure
         self.command_manager.add_command_group('tutorial.cli.sub1')
         self.command_manager.add_command_group('tutorial.cli.sub2')
+        self.command_manager.add_command('complete', cliff.complete.CompleteCommand)
         config_path = self.options.config
         if os.path.exists(config_path):
             self.config = configparser.ConfigParser()
@@ -62,7 +68,7 @@ class Tutorial(App):
 
 
 def main(argv=sys.argv[1:]):
-    ret = Tutorial.get_instance().run(argv)
+    ret = Tutorial.instance().run(argv)
     if isinstance(ret, dict):
         print(ret)
         return 0

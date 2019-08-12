@@ -2,7 +2,6 @@ import os
 import sys
 import configparser
 
-import cliff
 from cliff.app import App
 
 from tutorial.common.commandmanager import CommandManager
@@ -14,12 +13,13 @@ class Tutorial(App):
     """
     __instance = None
 
-    def __init__(self):
+    def __init__(self, stdout=None):
         super(Tutorial, self).__init__(
             description='cliff tutorial',
             version='0.0.1',
             command_manager=CommandManager('tutorial.cli'),
             deferred_help=True,
+            stdout=stdout
         )
         self.config = None
 
@@ -52,7 +52,6 @@ class Tutorial(App):
         # TODO(jhyoo): change this to plug-in structure
         self.command_manager.add_command_group('tutorial.cli.sub1')
         self.command_manager.add_command_group('tutorial.cli.sub2')
-        self.command_manager.add_command('complete', cliff.complete.CompleteCommand)
         config_path = self.options.config
         if os.path.exists(config_path):
             self.config = configparser.ConfigParser()

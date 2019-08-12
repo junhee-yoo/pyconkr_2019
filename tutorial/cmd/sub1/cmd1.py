@@ -22,9 +22,17 @@ class TutorialSub1Command1(command.Command):
         return parser
 
     def take_action(self, parsed_args):
-        ret = subprocess.check_call(["ls", "-l"])
+        output = subprocess.check_output(["ps", "aux"]).decode('utf-8')
+
+        def handle(row):
+            s = row.split()
+            return "{}: {}".format(s[0], s[1])
+
+        ret = list(map(lambda row: handle(row), filter(lambda l: parsed_args.arg1 in l, output.split('\n'))))
+
         return {'hello': 'cliff',
-                'args': parsed_args}
+                'args': parsed_args,
+                'output': "\n".join(ret)}
 
 
 class TutorialSub1Command2(lister.Lister):

@@ -51,9 +51,11 @@ class Sub1Cmd1(Resource):
     def get(self):
         parser = reqparse.RequestParser()
         parser.add_argument('arg1', required=True, type=str, location='args')
+        parser.add_argument('arg2', required=True, type=str, location='args')
         args = parser.parse_args()
 
-        ret = TutorialSub1Command1(Tutorial(), args, 'sub1 cmd1').run(args)
+        ss = StringStream()
+        ret = TutorialSub1Command1(Tutorial(stdout=ss), args, 'sub1 cmd1').run(args)
         return ret
 
 

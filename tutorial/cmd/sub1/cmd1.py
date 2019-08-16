@@ -47,6 +47,7 @@ class TutorialSub1Command1Hook(hooks.CommandHook):
         self.cmd.app.stdout.write('before\n')
 
     def after(self, parsed_args, return_code):
+        self.cmd.app.stdout.write('after\n')
         return_code['from_hook'] = "I'm from hook!"
         return return_code
 

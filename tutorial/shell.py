@@ -50,8 +50,10 @@ class Tutorial(App):
     def initialize_app(self, argv):
         self.LOG.debug('initializing_app')
         # TODO(jhyoo): change this to plug-in structure
+        self.command_manager.add_all_command_group()
         self.command_manager.add_command_group('tutorial.cli.sub1')
         self.command_manager.add_command_group('tutorial.cli.sub2')
+        self.command_manager.add_command_group('tutorial.cli.sub1_cmd1')
         config_path = self.options.config
         if os.path.exists(config_path):
             self.config = configparser.ConfigParser()

@@ -46,8 +46,14 @@ class RestAPIServe(command.Command):
         return app.run(debug=True, host='0.0.0.0', port=getattr(parsed_args, 'port', 8080))
 
 
-@API.route('/api/v1/sub1/cmd1', methods=['GET', 'POST', 'DELETE'])
+ns = API.namespace('sub1')
+
+
+@ns.route('/api/v1/sub1/cmd1', methods=['GET', 'POST', 'DELETE'])
 class Sub1Cmd1(Resource):
+    @ns.doc('get')
+    @ns.param('arg1', 'String value')
+    @ns.param('arg2', 'String value')
     def get(self):
         parser = reqparse.RequestParser()
         parser.add_argument('arg1', required=True, type=str, location='args')
@@ -59,8 +65,9 @@ class Sub1Cmd1(Resource):
         return ret
 
 
-@API.route('/api/v1/sub1/cmd2', methods=['GET', 'POST', 'DELETE'])
+@ns.route('/api/v1/sub1/cmd2', methods=['GET', 'POST', 'DELETE'])
 class Sub1Cmd1(Resource):
+    @ns.doc('get')
     def get(self):
         parser = reqparse.RequestParser()
         parser.add_argument('formatter', default='json')

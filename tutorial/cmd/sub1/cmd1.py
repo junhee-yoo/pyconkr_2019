@@ -1,6 +1,6 @@
 import argparse
 import subprocess
-from cliff import command, lister
+from cliff import command, lister, hooks
 
 
 def type_check(arg):
@@ -33,6 +33,22 @@ class TutorialSub1Command1(command.Command):
         return {'hello': 'cliff',
                 'args': parsed_args,
                 'output': "\n".join(ret)}
+
+
+class TutorialSub1Command1Hook(hooks.CommandHook):
+    def get_parser(self, parser):
+        # parser.add_argument('--hook')
+        return parser
+
+    def get_epilog(self):
+        return 'this is from hook'
+
+    def before(self, parsed_args):
+        self.cmd.app.stdout.write('before\n')
+
+    def after(self, parsed_args, return_code):
+        return_code['from_hook'] = "I'm from hook!"
+        return return_code
 
 
 class TutorialSub1Command2(lister.Lister):

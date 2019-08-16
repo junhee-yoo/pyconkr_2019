@@ -43,6 +43,11 @@ class CommandManager(cliff.commandmanager.CommandManager):
         """Returns a list of the loaded command groups"""
         return self.group_list
 
+    def add_all_command_group(self):
+        pass
+        # for ep in pkg_resources:
+        #     print(ep)
+
     def get_command_names(self, group=None):
         """Returns a list of commands loaded for the specified group"""
         group_list = []
